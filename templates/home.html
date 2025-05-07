@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strona Główna</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-image: url('{{ url_for("static", filename="img/drinks.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        nav {
+            background-color: #3498db;
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav ul li {
+            display: inline-block;
+            margin-right: 30px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: #fff; /* Zmiana koloru na biały */
+            font-size: 20px; /* Zwiększenie rozmiaru czcionki */
+            transition: color 0.3s; /* Animacja zmiany koloru */
+        }
+        
+        nav ul li a:hover {
+            color: #ffcc00; /* Zmiana koloru na żółty po najechaniu myszką */
+        }
+        
+        h1 {
+            text-align: center;
+            color: #3498db; /* Zmiana koloru na niebieski */
+            font-size: 30px; /* Zwiększenie rozmiaru czcionki */
+        }
+        
+        h2 {
+            text-align: center;
+            font-size: 24px; /* Zwiększenie rozmiaru czcionki */
+            color: #fff; /* Zmiana koloru na biały */
+        }
+        
+        .table-container {
+            margin-top: 50px; /* Zwiększenie odstępu od góry */
+            padding: 30px;
+            border: 1px solid #ccc;
+            color: #fff;
+        }
+        
+        div {
+            text-align: center;
+            margin-top: 50px; /* Zwiększenie odstępu od góry */
+            color: #fff; /* Zmiana koloru na biały */
+        }
+
+        .guest-menu {
+            display: block;
+        }
+
+        .user-menu {
+            display: none;
+        }
+
+        .guest-content {
+            display: block;
+        }
+
+        .user-content {
+            display: none;
+        }
+        
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul class="guest-menu">
+            <li><a href="{{ url_for('home') }}">Strona Główna</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('register') }}">Zarejestruj się</a></li>
+            <li><a href="{{ url_for('login') }}">Zaloguj się</a></li>
+        </ul>
+    
+        <ul class="user-menu">
+            <li><a href="{{ url_for('home') }}">Strona Główna</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('add_product') }}">Dodaj Produkt</a></li>
+            <li><a href="{{ url_for('logout') }}">Wyloguj</a></li>
+        </ul>
+    </nav>
+
+{% if user %}
+<div class="guest-content">
+    <h1 class="guest-content">Strona Główna dla Gości</h1>
+    <p>Tutaj dodaj krótki wstęp dla niezalogowanych użytkowników.</p>
+</div>
+    <h1>Strona Główna</h1>
+    <h2>Witaj, {{ user }}!</h2>
+    <ul class="table-container">
+        {% include 'dashboard.html' %}
+    </ul>
+{% else %}
+<div class="user-content">
+    <h1 class="user-content">Strona Główna dla Zalogowanych Użytkowników</h1>
+    <p>Witaj, {{ user }}! Tutaj możesz zobaczyć specjalne treści dostępne tylko dla zalogowanych użytkowników.</p>
+</div>
+    <h1>Strona Główna</h1>
+    <h2>Witaj na naszej stronie</h2>
+    <div>
+        <p>Strona projektu Programowanie Aplikacji Internetowych.</p>
+    </div>
+{% endif %}
+
+<footer>
+    <p>Adrian Lesniak nr. indeksu 154256</p>
+</footer>
+
+</body>
+</html>

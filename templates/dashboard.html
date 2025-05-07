@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #ffebcd; /* Tło dodane dla czytelności, pomarańczowe */
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff4500; /* Pomarańczowy kolor nagłówka */
+            font-size: 30px;
+        }
+
+        p {
+            text-align: center;
+            color: #000000; /* Pomarańczowy kolor tekstu */
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #ff4500; /* Pomarańczowy kolor linku */
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #cc3700; /* Ciemniejszy odcień pomarańczowego po najechaniu */
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ff4500; /* Pomarańczowa obwódka dla komórek tabeli */
+            text-align: center;
+        }
+
+        th {
+            background-color: #ff8c66; /* Jasnopomarańczowe tło nagłówka tabeli */
+            color: #fff;
+        }
+
+        tbody tr:hover {
+            background-color: #ffe5cc; /* Jasnopomarańczowe tło dla wiersza po najechaniu */
+        }
+
+        tfoot {
+            background-color: #ff4500; /* Pomarańczowe tło stopki tabeli */
+            color: #fff;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Dashboard</h1>
+
+    {% if user %}
+        <p>Zalogowany jako: {{ user }}</p>
+        <a href="{{ url_for('login') }}">Wyloguj</a>
+    {% else %}
+        <p>Nie jesteś zalogowany</p>
+        <a href="{{ url_for('login') }}">Zaloguj się</a>
+    {% endif %}
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nazwa</th>
+                <th>Opis</th>
+                {% if user %}
+                    <th>Akcje</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.id }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.description }}</td>
+                    {% if user %}
+                        <td>
+                            <a href="{{ url_for('edit_product', id=product.id) }}">Edytuj</a>
+                            <form method="POST" action="{{ url_for('delete_product', id=product.id) }}" style="display:inline;">
+                                <button type="submit">Usuń</button>
+                            </form>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3"></td>
+                {% if user %}
+                    <td>
+                        <a href="{{ url_for('add_product') }}">Dodaj Produkt</a>
+                    </td>
+                {% endif %}
+            </tr>
+        </tfoot>
+    </table>
+    <footer>
+        <p>Adrian Lesniak nr. indeksu 154256</p>
+    </footer>
+    </body>
+    </html>
