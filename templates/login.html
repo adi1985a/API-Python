@@ -1,140 +1,162 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
+
+{% block title %}Login - Product Management System{% endblock %}
+
+{% block content %}
+<div class="menu-section">
+    <h2 class="menu-title">
+        <i class="fas fa-sign-in-alt"></i>
+        System Login
+    </h2>
     
-    <title>Login Page</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background-color: #FF6347; /* Czerwone tło */
-        }
-
-        h1 {
-            text-align: center;
-            color: #8B0000; /* Ciemnoczerwony kolor nagłówka */
-            font-size: 30px;
-        }
-
-        form {
-            width: 60%;
-            margin: 20px auto;
-            background-color: #fff; /* Białe tło formularza */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #8B0000; /* Ciemnoczerwony kolor etykiety */
-        }
-
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
-            border: 1px solid #8B0000; /* Ciemnoczerwona obwódka dla pól tekstowych */
-            border-radius: 4px;
-        }
-
-        button {
-            background-color: #8B0000; /* Ciemnoczerwony kolor przycisku */
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #CD5C5C; /* Ciemniejszy odcień czerwonego po najechaniu */
-        }
-
-        nav {
-            background-color: #4caf50; /* Zielony kolor menu */
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        nav ul li {
-            display: inline-block;
-            margin-right: 30px;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: #fff;
-            font-size: 20px;
-            transition: color 0.3s;
-        }
-
-        nav ul li a:hover {
-            color: #ffcc00;
-        }
-
-        a {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #000000; /* Zielony kolor linku */
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: #ffcc00;
-        }
-
-        footer {
-            background-color: #333;
-            color: #fff;
-            padding: 20px 0;
-            text-align: center;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
-</head>
-<body>
-    <nav>
-        <ul class="guest-menu">
-            <li><a href="{{ url_for('home') }}">Strona Główna</a></li>
-            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ url_for('register') }}">Zarejestruj się</a></li>
-            <li><a href="{{ url_for('login') }}">Zaloguj się</a></li>
-        </ul>
+    <div class="decoration-line"></div>
     
-    </nav>
-<h1>Logowanie</h1>
+    <!-- Test account information -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title text-center">
+                <i class="fas fa-info-circle"></i>
+                Test Accounts
+            </h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="alert alert-info">
+                        <strong>Administrator:</strong><br>
+                        Email: admin@example.com<br>
+                        Password: admin123
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="alert alert-info">
+                        <strong>User:</strong><br>
+                        Email: user@example.com<br>
+                        Password: user123
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<form method="POST" action="{{ url_for('login') }}">
-    <label for="email">Email:</label>
-    <input type="email" name="email" id="email" required="" autocomplete="email">
+    <!-- Login form -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title text-center mb-4">
+                <i class="fas fa-user-lock"></i>
+                Enter Login Credentials
+            </h5>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show">
+                            <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' }}"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="mb-3">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <input type="email" class="form-control" id="email" name="email" 
+                           placeholder="Enter your email" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <input type="password" class="form-control" id="password" name="password" 
+                           placeholder="Enter your password" required>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-custom">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Log In
+                    </button>
+                </div>
+            </form>
+            
+            <div class="text-center mt-3">
+                <p>Don't have an account yet? 
+                    <a href="{{ url_for('register') }}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-user-plus"></i>
+                        Register
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation buttons -->
+    <div class="text-center mt-4">
+        <a href="{{ url_for('home') }}" class="btn btn-secondary">
+            <i class="fas fa-home"></i>
+            Return to Main Menu
+        </a>
+    </div>
+</div>
 
+<script>
+// Auto-fill fields for quick testing
+document.addEventListener('DOMContentLoaded', function() {
+    const emailField = document.getElementById('email');
+    const passwordField = document.getElementById('password');
+    
+    // Add keyboard shortcuts for quick login
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey) {
+            switch(e.key) {
+                case '1':
+                    e.preventDefault();
+                    emailField.value = 'admin@example.com';
+                    passwordField.value = 'admin123';
+                    break;
+                case '2':
+                    e.preventDefault();
+                    emailField.value = 'user@example.com';
+                    passwordField.value = 'user123';
+                    break;
+            }
+        }
+    });
+    
+    // Information about shortcuts
+    setTimeout(function() {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-info alert-dismissible fade show';
+        alertDiv.innerHTML = `
+            <i class="fas fa-keyboard"></i>
+            <strong>Keyboard shortcuts:</strong> Ctrl+1 (admin) or Ctrl+2 (user) - quick fill credentials.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.querySelector('.card-body').insertBefore(alertDiv, document.querySelector('form'));
+    }, 1000);
+});
 
-    <label for="password">Hasło:</label>
-    <input type="password" name="password" id="password" required>
-
-    <button type="submit">Zaloguj</button>
-</form>
-<a href="{{ url_for('home') }}">Wróć do Strony glownej</a>
-
-<footer>
-    <p>Adrian Lesniak nr. indeksu 154256</p>
-</footer>
-</body>
-</html>
+// Form validation
+document.querySelector('form').addEventListener('submit', function(e) {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    
+    if (!email || !password) {
+        e.preventDefault();
+        alert('All fields are required!');
+        return false;
+    }
+    
+    if (!email.includes('@')) {
+        e.preventDefault();
+        alert('Please enter a valid email address!');
+        return false;
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,83 @@
+[
+  {
+    "id": 1,
+    "name": "Cola-Cola",
+    "description": "Cola-Cola, 0.5l",
+    "price": 3.5,
+    "category": "Beverages",
+    "updated_at": "2025-07-17T02:51:53.557307"
+  },
+  {
+    "id": 2,
+    "name": "Pepsi",
+    "description": "Pepsi, 0.5l",
+    "price": 3.5,
+    "category": "Beverages",
+    "updated_at": "2025-07-17T03:25:02.769846"
+  },
+  {
+    "id": 3,
+    "name": "Fanta",
+    "description": "Fanta, 0.5l",
+    "price": 3.0,
+    "category": "Beverages",
+    "updated_at": "2025-07-17T03:26:32.869243"
+  },
+  {
+    "id": 4,
+    "name": "Sprite",
+    "description": "Sprite, 0.5l",
+    "price": 3.0,
+    "category": "Beverages",
+    "updated_at": "2025-07-17T03:26:19.150604"
+  },
+  {
+    "id": 5,
+    "name": "Cola-zero",
+    "description": "Cola-zero, 0.5l",
+    "price": 3.5,
+    "category": "Beverages",
+    "updated_at": "2025-07-17T03:26:09.224847"
+  },
+  {
+    "id": 6,
+    "name": "Solo",
+    "description": "Solo, 0.5l",
+    "price": 3.0,
+    "category": "Beverages",
+    "created_at": "2025-07-17T03:29:01.617550",
+    "updated_at": "2025-07-17T03:30:38.608093"
+  },
+  {
+    "id": 7,
+    "name": "Burger XXL",
+    "description": "Burger, 350dg",
+    "price": 9.5,
+    "category": "Food",
+    "created_at": "2025-07-17T03:31:46.868584"
+  },
+  {
+    "id": 8,
+    "name": "SmartTV Sony",
+    "description": "SmartTV Sony 32L-400",
+    "price": 650.0,
+    "category": "Electronics",
+    "created_at": "2025-07-17T03:32:42.684919"
+  },
+  {
+    "id": 9,
+    "name": "Green Tea",
+    "description": "Green Tea, 0.7l",
+    "price": 5.5,
+    "category": "Beverages",
+    "created_at": "2025-07-17T03:33:42.825362"
+  },
+  {
+    "id": 10,
+    "name": "Harry and magic",
+    "description": "Harry and magic by Aureolis Poponus",
+    "price": 12.5,
+    "category": "Books",
+    "created_at": "2025-07-17T03:37:54.266990"
+  }
+]

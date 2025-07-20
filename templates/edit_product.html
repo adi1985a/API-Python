@@ -1,141 +1,391 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
+
+{% block title %}Edit Product - Product Management System{% endblock %}
+
+{% block content %}
+<div class="menu-section">
+    <h2 class="menu-title">
+        <i class="fas fa-edit"></i>
+        Edit Product
+    </h2>
     
-    <title>Edytuj Napój</title>
+    <div class="decoration-line"></div>
+    
+    <!-- Product information -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title text-center">
+                <i class="fas fa-info-circle"></i>
+                Product Information
+            </h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="alert alert-info">
+                        <i class="fas fa-box"></i>
+                        <strong>Product ID:</strong> {{ product.id }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="alert alert-info">
+                        <i class="fas fa-calendar"></i>
+                        <strong>Created:</strong> {{ product.created_at[:10] if product.created_at else 'No data' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background-color: #87CEEB; /* Jasnoniebieskie tło */
+    <!-- Edit product form -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title text-center mb-4">
+                <i class="fas fa-edit"></i>
+                Edit Product Information
+            </h5>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show">
+                            <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' }}"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST" action="{{ url_for('edit_product', id=product.id) }}" id="editProductForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">
+                                <i class="fas fa-box"></i>
+                                Product Name *
+                            </label>
+                            <input type="text" class="form-control" id="name" name="name" 
+                                   value="{{ product.name }}" placeholder="Enter product name" required>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i>
+                                Enter a clear and descriptive product name
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="category" class="form-label">
+                                <i class="fas fa-tag"></i>
+                                Category
+                            </label>
+                            <select class="form-select" id="category" name="category">
+                                <option value="Beverages" {{ 'selected' if product.category == 'Beverages' }}>Beverages</option>
+                                <option value="Food" {{ 'selected' if product.category == 'Food' }}>Food</option>
+                                <option value="Electronics" {{ 'selected' if product.category == 'Electronics' }}>Electronics</option>
+                                <option value="Clothing" {{ 'selected' if product.category == 'Clothing' }}>Clothing</option>
+                                <option value="Books" {{ 'selected' if product.category == 'Books' }}>Books</option>
+                                <option value="Other" {{ 'selected' if product.category == 'Other' }}>Other</option>
+                            </select>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i>
+                                Select the most appropriate category
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="description" class="form-label">
+                        <i class="fas fa-info-circle"></i>
+                        Description *
+                    </label>
+                    <textarea class="form-control" id="description" name="description" rows="4" 
+                              placeholder="Enter detailed product description" required>{{ product.description }}</textarea>
+                    <div class="form-text">
+                        <i class="fas fa-info-circle"></i>
+                        Provide comprehensive product information
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="price" class="form-label">
+                                <i class="fas fa-euro-sign"></i>
+                                Price
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="price" name="price" 
+                                       value="{{ product.price }}" placeholder="0.00" step="0.01" min="0">
+                                <span class="input-group-text">€</span>
+                            </div>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i>
+                                Enter price in euro (optional)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-calculator"></i>
+                                Price Preview
+                            </label>
+                            <div class="form-control-plaintext" id="pricePreview">
+                                <span class="text-success fw-bold">€{{ "%.2f"|format(product.price) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="confirmEdit" required>
+                        <label class="form-check-label" for="confirmEdit">
+                            <i class="fas fa-check-square"></i>
+                            I confirm that all information is correct and I want to update this product
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex">
+                    <button type="submit" class="btn btn-custom">
+                        <i class="fas fa-save"></i>
+                        Update Product
+                    </button>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </a>
+                    <a href="{{ url_for('home') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-home"></i>
+                        Main Menu
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Product preview -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h6 class="card-title mb-0">
+                <i class="fas fa-eye"></i>
+                Product Preview
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <div id="previewContent">
+                        <h6><i class="fas fa-box"></i> {{ product.name }}</h6>
+                        <p class="text-muted">{{ product.description }}</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small class="text-muted">
+                                    <i class="fas fa-tag"></i> Category: {{ product.category }}
+                                </small>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted">
+                                    <i class="fas fa-euro-sign"></i> Price: €{{ "%.2f"|format(product.price) }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-box fa-3x text-primary mb-2"></i>
+                            <h6 id="previewName">{{ product.name }}</h6>
+                            <p class="text-muted" id="previewCategory">{{ product.category }}</p>
+                            <h5 class="text-success" id="previewPrice">€{{ "%.2f"|format(product.price) }}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Product history -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h6 class="card-title mb-0">
+                <i class="fas fa-history"></i>
+                Product History
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6><i class="fas fa-calendar-plus"></i> Creation Date:</h6>
+                    <p class="text-muted">{{ product.created_at if product.created_at else 'No data available' }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h6><i class="fas fa-calendar-edit"></i> Last Update:</h6>
+                    <p class="text-muted">{{ product.updated_at if product.updated_at else 'No updates yet' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Real-time preview
+document.getElementById('name').addEventListener('input', updatePreview);
+document.getElementById('description').addEventListener('input', updatePreview);
+document.getElementById('category').addEventListener('change', updatePreview);
+document.getElementById('price').addEventListener('input', updatePreview);
+
+function updatePreview() {
+    const name = document.getElementById('name').value || 'Product Name';
+    const description = document.getElementById('description').value || 'No description provided';
+    const category = document.getElementById('category').value || 'Other';
+    const price = parseFloat(document.getElementById('price').value) || 0;
+    
+    // Update preview content
+    document.getElementById('previewName').textContent = name;
+    document.getElementById('previewCategory').textContent = category;
+    document.getElementById('previewPrice').textContent = `€${price.toFixed(2)}`;
+    
+    // Update detailed preview
+    const previewContent = document.getElementById('previewContent');
+    previewContent.innerHTML = `
+        <h6><i class="fas fa-box"></i> ${name}</h6>
+        <p class="text-muted">${description}</p>
+        <div class="row">
+            <div class="col-md-6">
+                <small class="text-muted">
+                    <i class="fas fa-tag"></i> Category: ${category}
+                </small>
+            </div>
+            <div class="col-md-6">
+                <small class="text-muted">
+                    <i class="fas fa-euro-sign"></i> Price: €${price.toFixed(2)}
+                </small>
+            </div>
+        </div>
+    `;
+}
+
+// Form validation
+document.getElementById('editProductForm').addEventListener('submit', function(e) {
+    const name = document.getElementById('name').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const price = document.getElementById('price').value;
+    const confirmEdit = document.getElementById('confirmEdit').checked;
+    
+    // Check required fields
+    if (!name) {
+        e.preventDefault();
+        alert('Product name is required!');
+        document.getElementById('name').focus();
+        return false;
+    }
+    
+    if (!description) {
+        e.preventDefault();
+        alert('Product description is required!');
+        document.getElementById('description').focus();
+        return false;
+    }
+    
+    // Check price format
+    if (price && (isNaN(price) || parseFloat(price) < 0)) {
+        e.preventDefault();
+        alert('Please enter a valid price (positive number)!');
+        document.getElementById('price').focus();
+        return false;
+    }
+    
+    // Check confirmation
+    if (!confirmEdit) {
+        e.preventDefault();
+        alert('You must confirm that you want to update this product!');
+        return false;
+    }
+    
+    // Final confirmation
+    if (!confirm('Are you sure you want to update this product?')) {
+        e.preventDefault();
+        return false;
+    }
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey) {
+        switch(e.key) {
+            case 's':
+                e.preventDefault();
+                document.getElementById('editProductForm').submit();
+                break;
+            case 'b':
+                e.preventDefault();
+                window.location.href = '{{ url_for("dashboard") }}';
+                break;
+            case 'h':
+                e.preventDefault();
+                window.location.href = '{{ url_for("home") }}';
+                break;
         }
+    }
+});
 
-        h1 {
-            text-align: center;
-            color: #000080; /* Granatowy kolor nagłówka */
-            font-size: 30px;
-        }
+// Auto-save draft (localStorage)
+function saveDraft() {
+    const formData = {
+        name: document.getElementById('name').value,
+        description: document.getElementById('description').value,
+        category: document.getElementById('category').value,
+        price: document.getElementById('price').value
+    };
+    localStorage.setItem(`editProductDraft_${productId}`, JSON.stringify(formData));
+}
 
-        form {
-            width: 60%;
-            margin: 20px auto;
-            background-color: #fff; /* Białe tło formularza */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+function loadDraft() {
+    const productId = {{ product.id }};
+    const draft = localStorage.getItem(`editProductDraft_${productId}`);
+    if (draft) {
+        const data = JSON.parse(draft);
+        document.getElementById('name').value = data.name || '';
+        document.getElementById('description').value = data.description || '';
+        document.getElementById('category').value = data.category || '';
+        document.getElementById('price').value = data.price || updatePreview();
+    }
+}
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #000080; /* Granatowy kolor etykiety */
-        }
+// Auto-save every 5 seconds
+setInterval(saveDraft, 5000);
 
-        input, textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
-            border: 1px solid #000080; /* Granatowa obwódka dla pól tekstowych */
-            border-radius: 4px;
-        }
+// Load draft on page load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Page loaded, product data:', {
+        name: '{{ product.name }}',
+        description: '{{ product.description }}',
+        category: '{{ product.category }}',
+        price: {{ product.price }},
+        id: {{ product.id }}
+    });
+    
+    loadDraft();
+    
+    // Keyboard shortcuts information
+    setTimeout(function() {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-info alert-dismissible fade show';
+        alertDiv.innerHTML = `
+            <i class="fas fa-keyboard"></i>
+            <strong>Keyboard shortcuts:</strong> Ctrl+S (save), Ctrl+B (back), Ctrl+H (main menu)
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.querySelector('.card-body').insertBefore(alertDiv, document.querySelector('form'));
+    }, 1000);
+});
 
-        button {
-            background-color: #000080; /* Granatowy kolor przycisku */
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #001F3F; /* Ciemniejszy odcień granatowego po najechaniu */
-        }
-
-        nav {
-            background-color: #4caf50; /* Zielony kolor menu */
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        nav ul li {
-            display: inline-block;
-            margin-right: 30px;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: #fff;
-            font-size: 20px;
-            transition: color 0.3s;
-        }
-
-        nav ul li a:hover {
-            color: #ffcc00;
-        }
-
-        a {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #000000; /* Zielony kolor linku */
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: #ffcc00;
-        }
-
-        footer {
-            background-color: #333;
-            color: #fff;
-            padding: 20px 0;
-            text-align: center;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
-</head>
-<body>
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('home') }}">Strona Główna</a></li>
-            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ url_for('add_product') }}">Dodaj Produkt</a></li>
-            <li><a href="{{ url_for('logout') }}">Wyloguj</a></li>
-        </ul>
-    </nav>
-<h1>Edytuj Napój</h1>
-
-<form method="POST" action="{{ url_for('edit_product', id=product.id) }}" autocomplete="off">
-    <label for="name">Nazwa:</label>
-    <input type="text" id="name" name="name" value="{{ product.name }}" required autocomplete="off">
-
-
-    <label for="description">Opis:</label>
-    <textarea id="description" name="description" required>{{ product.description }}</textarea>
-
-    <button type="submit">Zapisz zmiany</button>
-</form>
-
-<a href="{{ url_for('dashboard') }}">Wróć do Dashboard</a>
-
-<footer>
-    <p>Adrian Lesniak nr. indeksu 154256</p>
-</footer>
-</body>
-</html>
+// Clear draft after successful submission
+document.getElementById('editProductForm').addEventListener('submit', function() {
+    localStorage.removeItem('editProductDraft');
+});
+</script>
+{% endblock %}

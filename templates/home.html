@@ -1,146 +1,408 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strona Główna</title>
+{% extends "base.html" %}
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background-image: url('{{ url_for("static", filename="img/drinks.jpg") }}');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-        
-        nav {
-            background-color: #3498db;
-            text-align: center;
-            padding: 20px 0;
-        }
-        
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        
-        nav ul li {
-            display: inline-block;
-            margin-right: 30px;
-        }
-        
-        nav ul li a {
-            text-decoration: none;
-            color: #fff; /* Zmiana koloru na biały */
-            font-size: 20px; /* Zwiększenie rozmiaru czcionki */
-            transition: color 0.3s; /* Animacja zmiany koloru */
-        }
-        
-        nav ul li a:hover {
-            color: #ffcc00; /* Zmiana koloru na żółty po najechaniu myszką */
-        }
-        
-        h1 {
-            text-align: center;
-            color: #3498db; /* Zmiana koloru na niebieski */
-            font-size: 30px; /* Zwiększenie rozmiaru czcionki */
-        }
-        
-        h2 {
-            text-align: center;
-            font-size: 24px; /* Zwiększenie rozmiaru czcionki */
-            color: #fff; /* Zmiana koloru na biały */
-        }
-        
-        .table-container {
-            margin-top: 50px; /* Zwiększenie odstępu od góry */
-            padding: 30px;
-            border: 1px solid #ccc;
-            color: #fff;
-        }
-        
-        div {
-            text-align: center;
-            margin-top: 50px; /* Zwiększenie odstępu od góry */
-            color: #fff; /* Zmiana koloru na biały */
-        }
+{% block title %}Home - Product Management System{% endblock %}
 
-        .guest-menu {
-            display: block;
-        }
-
-        .user-menu {
-            display: none;
-        }
-
-        .guest-content {
-            display: block;
-        }
-
-        .user-content {
-            display: none;
-        }
-        
-        footer {
-            background-color: #333;
-            color: #fff;
-            padding: 20px 0;
-            text-align: center;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
-</head>
-<body>
-
-    <nav>
-        <ul class="guest-menu">
-            <li><a href="{{ url_for('home') }}">Strona Główna</a></li>
-            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ url_for('register') }}">Zarejestruj się</a></li>
-            <li><a href="{{ url_for('login') }}">Zaloguj się</a></li>
-        </ul>
+{% block content %}
+<div class="menu-section">
+    <h2 class="menu-title">Main Menu</h2>
     
-        <ul class="user-menu">
-            <li><a href="{{ url_for('home') }}">Strona Główna</a></li>
-            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ url_for('add_product') }}">Dodaj Produkt</a></li>
-            <li><a href="{{ url_for('logout') }}">Wyloguj</a></li>
-        </ul>
-    </nav>
-
-{% if user %}
-<div class="guest-content">
-    <h1 class="guest-content">Strona Główna dla Gości</h1>
-    <p>Tutaj dodaj krótki wstęp dla niezalogowanych użytkowników.</p>
-</div>
-    <h1>Strona Główna</h1>
-    <h2>Witaj, {{ user }}!</h2>
-    <ul class="table-container">
-        {% include 'dashboard.html' %}
-    </ul>
-{% else %}
-<div class="user-content">
-    <h1 class="user-content">Strona Główna dla Zalogowanych Użytkowników</h1>
-    <p>Witaj, {{ user }}! Tutaj możesz zobaczyć specjalne treści dostępne tylko dla zalogowanych użytkowników.</p>
-</div>
-    <h1>Strona Główna</h1>
-    <h2>Witaj na naszej stronie</h2>
-    <div>
-        <p>Strona projektu Programowanie Aplikacji Internetowych.</p>
+    <div class="decoration-line"></div>
+    
+    <!-- Program function description -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title text-center">
+                <i class="fas fa-info-circle"></i>
+                Program Function Description
+            </h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Product management (add, edit, delete)</li>
+                        <li><i class="fas fa-check text-success"></i> User login and registration system</li>
+                        <li><i class="fas fa-check text-success"></i> Save and load data from JSON file</li>
+                        <li><i class="fas fa-check text-success"></i> Error and event logging</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> REST API for integration with other systems</li>
+                        <li><i class="fas fa-check text-success"></i> Responsive user interface</li>
+                        <li><i class="fas fa-check text-success"></i> Exception and error handling</li>
+                        <li><i class="fas fa-check text-success"></i> Secure session management</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-{% endif %}
 
-<footer>
-    <p>Adrian Lesniak nr. indeksu 154256</p>
-</footer>
+    <!-- User roles information -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title text-center">
+                <i class="fas fa-users"></i>
+                User Roles and Permissions
+            </h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="alert alert-danger">
+                        <h6><i class="fas fa-crown"></i> Administrator</h6>
+                        <ul class="mb-0">
+                            <li>Full access to all features</li>
+                            <li>Add, edit, and delete products</li>
+                            <li>Manage system settings</li>
+                            <li>View all logs and statistics</li>
+                        </ul>
+                        <small class="text-muted">Login: admin@example.com / admin123</small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="alert alert-secondary">
+                        <h6><i class="fas fa-user"></i> Regular User</h6>
+                        <ul class="mb-0">
+                            <li>View products (read-only)</li>
+                            <li>Search and filter products</li>
+                            <li>View product details</li>
+                            <li>No modification privileges</li>
+                        </ul>
+                        <small class="text-muted">Login: user@example.com / user123</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-</body>
-</html>
+    <!-- Menu options -->
+    <div class="menu-grid">
+        <a href="{{ url_for('login') }}" class="menu-item">
+            <div class="menu-icon">
+                <i class="fas fa-sign-in-alt"></i>
+            </div>
+            <div class="menu-text">Login</div>
+            <div class="menu-description">
+                Log in to the system to access product management functions
+            </div>
+        </a>
+
+        <a href="{{ url_for('register') }}" class="menu-item">
+            <div class="menu-icon">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <div class="menu-text">Register</div>
+            <div class="menu-description">
+                Create a new user account in the system
+            </div>
+        </a>
+
+        <a href="{{ url_for('dashboard') }}" class="menu-item">
+            <div class="menu-icon">
+                <i class="fas fa-tachometer-alt"></i>
+            </div>
+            <div class="menu-text">Dashboard</div>
+            <div class="menu-description">
+                Go to the product management panel (requires login)
+            </div>
+        </a>
+
+        <a href="{{ url_for('add_product') }}" class="menu-item">
+            <div class="menu-icon">
+                <i class="fas fa-plus-circle"></i>
+            </div>
+            <div class="menu-text">Add Product</div>
+            <div class="menu-description">
+                Add a new product to the database (admin only)
+            </div>
+        </a>
+
+        <a href="{{ url_for('products_html') }}" class="menu-item">
+            <div class="menu-icon">
+                <i class="fas fa-list"></i>
+            </div>
+            <div class="menu-text">Products List</div>
+            <div class="menu-description">
+                View all products in a readable table format
+            </div>
+        </a>
+
+        <a href="{{ url_for('products_api_html') }}" class="menu-item">
+            <div class="menu-icon">
+                <i class="fas fa-code"></i>
+            </div>
+            <div class="menu-text">Products API</div>
+            <div class="menu-description">
+                Display product list in API HTML format
+            </div>
+        </a>
+
+        <a href="#" onclick="showSystemInfo()" class="menu-item menu-item-wide special-system-info">
+            <div class="menu-icon">
+                <i class="fas fa-cogs"></i>
+            </div>
+            <div class="menu-text">System Information</div>
+            <div class="menu-description">
+                Display information about the system and its functions
+            </div>
+        </a>
+    </div>
+
+    <!-- Instructions -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title text-center">
+                <i class="fas fa-keyboard"></i>
+                Usage Instructions
+            </h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6><i class="fas fa-mouse-pointer"></i> Navigation:</h6>
+                    <ul class="list-unstyled">
+                        <li>• Click on menu option to go to selected function</li>
+                        <li>• Use <kbd>ESC</kbd> key to return to main menu</li>
+                        <li>• All operations require login (except API)</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6><i class="fas fa-shield-alt"></i> Security:</h6>
+                    <ul class="list-unstyled">
+                        <li>• Data is automatically saved to JSON file</li>
+                        <li>• All errors are logged to app.log file</li>
+                        <li>• User sessions are securely managed</li>
+                        <li>• Admin privileges required for modifications</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal with system information -->
+<div class="modal fade" id="systemInfoModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-info-circle"></i>
+                    System Information
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-code"></i> Technologies:</h6>
+                        <ul>
+                            <li>Python 3.x</li>
+                            <li>Flask Framework</li>
+                            <li>HTML5 + CSS3</li>
+                            <li>JavaScript (ES6+)</li>
+                            <li>Bootstrap 5</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-database"></i> Data:</h6>
+                        <ul>
+                            <li>Format: JSON</li>
+                            <li>File: products.json</li>
+                            <li>Logs: app.log</li>
+                            <li>Encoding: UTF-8</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h6><i class="fas fa-list"></i> Available endpoints:</h6>
+                        <ul>
+                            <li><code>GET /api/products</code> - Product list</li>
+                            <li><code>POST /api/add_product</code> - Add product (admin only)</li>
+                            <li><code>PUT /api/edit_product/{id}</code> - Edit product (admin only)</li>
+                            <li><code>DELETE /api/delete_product/{id}</code> - Delete product (admin only)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h6><i class="fas fa-users"></i> User Roles:</h6>
+                        <ul>
+                            <li><strong>Administrator:</strong> Full access to all features</li>
+                            <li><strong>Regular User:</strong> Read-only access to products</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showSystemInfo() {
+    const modal = new bootstrap.Modal(document.getElementById('systemInfoModal'));
+    modal.show();
+}
+
+// Add keyboard navigation support
+document.addEventListener('keydown', function(e) {
+    switch(e.key) {
+        case '1':
+            window.location.href = '{{ url_for("login") }}';
+            break;
+        case '2':
+            window.location.href = '{{ url_for("register") }}';
+            break;
+        case '3':
+            window.location.href = '{{ url_for("dashboard") }}';
+            break;
+        case '4':
+            window.location.href = '{{ url_for("add_product") }}';
+            break;
+        case '5':
+            window.location.href = '{{ url_for("products_html") }}';
+            break;
+        case '6':
+            window.location.href = '{{ url_for("products_api_html") }}';
+            break;
+        case '7':
+            showSystemInfo();
+            break;
+    }
+});
+
+// Keyboard shortcuts information
+setTimeout(function() {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-info alert-dismissible fade show';
+    alertDiv.innerHTML = `
+        <i class="fas fa-lightbulb"></i>
+        <strong>Tip:</strong> Use keys 1-7 for quick navigation through the menu.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.querySelector('.menu-section').insertBefore(alertDiv, document.querySelector('.menu-grid'));
+}, 2000);
+</script>
+{% endblock %}
+
+<style>
+body {
+  background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+  min-height: 100vh;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  color: #222;
+}
+.menu-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 1rem 1rem 1rem;
+}
+.menu-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #5b21b6;
+  letter-spacing: 1px;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 8px #e0e7ff;
+}
+.decoration-line {
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #6366f1 0%, #a21caf 100%);
+  border-radius: 2px;
+  margin: 0 auto 2rem auto;
+}
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.menu-item {
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 24px rgba(99,102,241,0.08), 0 1.5px 6px rgba(162,28,175,0.04);
+  padding: 2.2rem 1.2rem 1.5rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
+  border: none;
+  text-decoration: none;
+  color: #222;
+}
+.menu-item:hover {
+  box-shadow: 0 8px 32px rgba(99,102,241,0.16), 0 3px 12px rgba(162,28,175,0.08);
+  transform: translateY(-4px) scale(1.03);
+  background: #f3e8ff;
+  color: #5b21b6;
+}
+.menu-icon {
+  font-size: 2.8rem;
+  color: #6366f1;
+  margin-bottom: 1rem;
+  transition: color 0.2s;
+}
+.menu-item:hover .menu-icon {
+  color: #a21caf;
+}
+.menu-text {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+.menu-description {
+  font-size: 1rem;
+  color: #666;
+  text-align: center;
+}
+.menu-item-wide.special-system-info {
+  grid-column: 1 / -1;
+  background: linear-gradient(90deg, #e0e7ff 0%, #f3e8ff 100%);
+  border: 2px solid #6366f1;
+  color: #5b21b6;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 2.5rem 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.menu-item-wide.special-system-info:hover {
+  background: linear-gradient(90deg, #6366f1 0%, #a21caf 100%);
+  color: #fff;
+  border-color: #a21caf;
+}
+.card, .alert {
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 12px rgba(99,102,241,0.07);
+  border: none;
+}
+.card-title {
+  color: #5b21b6;
+  font-weight: 700;
+}
+.btn, .btn-secondary, .btn-danger {
+  border-radius: 2rem;
+  font-weight: 600;
+  padding: 0.6rem 1.5rem;
+  font-size: 1.05rem;
+  border: none;
+  background: linear-gradient(90deg, #6366f1 0%, #a21caf 100%);
+  color: #fff;
+  transition: background 0.2s, color 0.2s;
+}
+.btn:hover, .btn-secondary:hover, .btn-danger:hover {
+  background: linear-gradient(90deg, #a21caf 0%, #6366f1 100%);
+  color: #fff;
+}
+@media (max-width: 900px) {
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

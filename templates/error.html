@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Error {{ error_code }} - Product Management System{% endblock %}
+
+{% block content %}
+<div class="menu-section">
+    <div class="text-center">
+        <div class="error-icon mb-4">
+            {% if error_code == 404 %}
+                <i class="fas fa-search fa-5x text-warning"></i>
+            {% elif error_code == 500 %}
+                <i class="fas fa-exclamation-triangle fa-5x text-danger"></i>
+            {% else %}
+                <i class="fas fa-exclamation-circle fa-5x text-info"></i>
+            {% endif %}
+        </div>
+        
+        <h1 class="display-4 text-{{ 'warning' if error_code == 404 else 'danger' }}">
+            Error {{ error_code }}
+        </h1>
+        
+        <h3 class="mb-4">
+            {% if error_code == 404 %}
+                Page Not Found
+            {% elif error_code == 500 %}
+                Server Error
+            {% else %}
+                An Error Occurred
+            {% endif %}
+        </h3>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <p class="lead">
+                    {% if error_code == 404 %}
+                        The page you are looking for does not exist or has been moved.
+                    {% elif error_code == 500 %}
+                        An internal server error occurred. Please try again later.
+                    {% else %}
+                        {{ error_message if error_message else 'An unexpected error occurred.' }}
+                    {% endif %}
+                </p>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-lightbulb"></i> What you can do:</h6>
+                            <ul class="mb-0">
+                                {% if error_code == 404 %}
+                                    <li>Check the URL for typos</li>
+                                    <li>Go back to the previous page</li>
+                                    <li>Use the navigation menu</li>
+                                {% else %}
+                                    <li>Refresh the page</li>
+                                    <li>Try again in a few minutes</li>
+                                    <li>Contact support if the problem persists</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="alert alert-warning">
+                            <h6><i class="fas fa-exclamation-triangle"></i> Technical details:</h6>
+                            <ul class="mb-0">
+                                <li>Error code: {{ error_code }}</li>
+                                <li>Time: {{ moment().format('YYYY-MM-DD HH:mm:ss') }}</li>
+                                <li>This error has been logged</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-3">
+                <a href="{{ url_for('home') }}" class="btn btn-custom w-100">
+                    <i class="fas fa-home"></i>
+                    Main Menu
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary w-100">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+            </div>
+            <div class="col-md-3">
+                <button onclick="history.back()" class="btn btn-outline-secondary w-100">
+                    <i class="fas fa-arrow-left"></i>
+                    Go Back
+                </button>
+            </div>
+            <div class="col-md-3">
+                <button onclick="location.reload()" class="btn btn-outline-info w-100">
+                    <i class="fas fa-redo"></i>
+                    Refresh Page
+                </button>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <div class="decoration-line"></div>
+            <p class="text-muted">
+                <i class="fas fa-info-circle"></i>
+                If you continue to experience problems, please contact the system administrator.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-redirect after 30 seconds
+setTimeout(function() {
+    if (confirm('Do you want to return to the main menu?')) {
+        window.location.href = '{{ url_for("home") }}';
+    }
+}, 30000);
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    switch(e.key) {
+        case 'h':
+        case 'H':
+            if (e.ctrlKey) {
+                e.preventDefault();
+                window.location.href = '{{ url_for("home") }}';
+            }
+            break;
+        case 'd':
+        case 'D':
+            if (e.ctrlKey) {
+                e.preventDefault();
+                window.location.href = '{{ url_for("dashboard") }}';
+            }
+            break;
+        case 'b':
+        case 'B':
+            if (e.ctrlKey) {
+                e.preventDefault();
+                history.back();
+            }
+            break;
+        case 'r':
+        case 'R':
+            if (e.ctrlKey) {
+                e.preventDefault();
+                location.reload();
+            }
+            break;
+    }
+});
+
+// Keyboard shortcuts information
+setTimeout(function() {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-info alert-dismissible fade show';
+    alertDiv.innerHTML = `
+        <i class="fas fa-keyboard"></i>
+        <strong>Keyboard shortcuts:</strong> Ctrl+H (main menu), Ctrl+D (dashboard), Ctrl+B (go back), Ctrl+R (refresh)
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.querySelector('.menu-section').insertBefore(alertDiv, document.querySelector('.text-center'));
+}, 2000);
+</script>
+{% endblock %} 

@@ -1,132 +1,476 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+{% extends "base.html" %}
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background-color: #ffebcd; /* Tło dodane dla czytelności, pomarańczowe */
-        }
+{% block title %}Dashboard - Product Management System{% endblock %}
 
-        h1 {
-            text-align: center;
-            color: #ff4500; /* Pomarańczowy kolor nagłówka */
-            font-size: 30px;
-        }
-
-        p {
-            text-align: center;
-            color: #000000; /* Pomarańczowy kolor tekstu */
-        }
-
-        a {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #ff4500; /* Pomarańczowy kolor linku */
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        a:hover {
-            color: #cc3700; /* Ciemniejszy odcień pomarańczowego po najechaniu */
-        }
-
-        table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            margin-bottom: 40px;
-        }
-
-        th, td {
-            padding: 10px;
-            border: 1px solid #ff4500; /* Pomarańczowa obwódka dla komórek tabeli */
-            text-align: center;
-        }
-
-        th {
-            background-color: #ff8c66; /* Jasnopomarańczowe tło nagłówka tabeli */
-            color: #fff;
-        }
-
-        tbody tr:hover {
-            background-color: #ffe5cc; /* Jasnopomarańczowe tło dla wiersza po najechaniu */
-        }
-
-        tfoot {
-            background-color: #ff4500; /* Pomarańczowe tło stopki tabeli */
-            color: #fff;
-        }
-
-        footer {
-            background-color: #333;
-            color: #fff;
-            padding: 20px 0;
-            text-align: center;
-            
-        }
-    </style>
-</head>
-<body>
-
-    <h1>Dashboard</h1>
-
-    {% if user %}
-        <p>Zalogowany jako: {{ user }}</p>
-        <a href="{{ url_for('login') }}">Wyloguj</a>
-    {% else %}
-        <p>Nie jesteś zalogowany</p>
-        <a href="{{ url_for('login') }}">Zaloguj się</a>
-    {% endif %}
+{% block content %}
+<div class="menu-section">
+    <h2 class="menu-title">
+        <i class="fas fa-tachometer-alt"></i>
+        Dashboard
+    </h2>
     
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nazwa</th>
-                <th>Opis</th>
-                {% if user %}
-                    <th>Akcje</th>
-                {% endif %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for product in products %}
-                <tr>
-                    <td>{{ product.id }}</td>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.description }}</td>
-                    {% if user %}
-                        <td>
-                            <a href="{{ url_for('edit_product', id=product.id) }}">Edytuj</a>
-                            <form method="POST" action="{{ url_for('delete_product', id=product.id) }}" style="display:inline;">
-                                <button type="submit">Usuń</button>
-                            </form>
-                        </td>
-                    {% endif %}
-                </tr>
+    <div class="decoration-line"></div>
+    
+    <!-- User information -->
+    <div class="d-flex justify-content-center">
+  <div class="card mb-4" style="max-width: 350px; width: 100%;">
+    <div class="card-body d-flex flex-column align-items-center justify-content-center text-center p-3">
+      <h5 class="card-title mb-2">
+        <i class="fas fa-user-circle"></i>
+        {{ user.name if user.name else user.email }}
+        {% if is_admin %}
+          <span class="badge bg-danger ms-2"><i class="fas fa-crown"></i> Administrator</span>
+        {% else %}
+          <span class="badge bg-secondary ms-2"><i class="fas fa-user"></i> User</span>
+        {% endif %}
+      </h5>
+      <p class="card-text mb-2"><i class="fas fa-clock"></i> Last login: Just now</p>
+      <a href="{{ url_for('logout') }}" class="btn btn-danger mt-2"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+</div>
+
+    <!-- Admin privileges info -->
+    {% if not is_admin %}
+    <div class="alert alert-info alert-dismissible fade show">
+        <i class="fas fa-info-circle"></i>
+        <strong>Information:</strong> You are logged in as a regular user. Only administrators can add, edit, or delete products. 
+        Contact your system administrator if you need elevated privileges.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+
+    <!-- Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-boxes fa-2x text-primary mb-2"></i>
+                    <h5 class="card-title">{{ products|length }}</h5>
+                    <p class="card-text">Total Products</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-tags fa-2x text-success mb-2"></i>
+                    <h5 class="card-title">{{ products|selectattr('category', 'equalto', 'Beverages')|list|length }}</h5>
+                    <p class="card-text">Beverages</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-dollar-sign fa-2x text-warning mb-2"></i>
+                    <h5 class="card-title">{{ "%.2f"|format(products|sum(attribute='price')) }} €</h5>
+                    <p class="card-text">Total Value (€)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-chart-line fa-2x text-info mb-2"></i>
+                    <h5 class="card-title">{{ products|selectattr('created_at')|list|length }}</h5>
+                    <p class="card-text">New Products</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show">
+                    <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' }}"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
             {% endfor %}
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="3"></td>
-                {% if user %}
-                    <td>
-                        <a href="{{ url_for('add_product') }}">Dodaj Produkt</a>
-                    </td>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Action buttons -->
+    <div class="row mb-4">
+        {% if is_admin %}
+        <div class="col-md-6">
+            <a href="{{ url_for('add_product') }}" class="btn btn-custom w-100">
+                <i class="fas fa-plus-circle"></i>
+                Add New Product
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a href="{{ url_for('home') }}" class="btn btn-secondary w-100">
+                <i class="fas fa-home"></i>
+                Return to Main Menu
+            </a>
+        </div>
+        {% else %}
+        <div class="col-md-12">
+            <div class="alert alert-warning">
+                <i class="fas fa-lock"></i>
+                <strong>Read-only access:</strong> You can view products but cannot modify them. 
+                Only administrators can add, edit, or delete products.
+            </div>
+        </div>
+        <div class="col-md-12">
+            <a href="{{ url_for('home') }}" class="btn btn-secondary w-100">
+                <i class="fas fa-home"></i>
+                Return to Main Menu
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Product list -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-list"></i>
+                Product List ({{ products|length }})
+                {% if not is_admin %}
+                    <small class="text-muted">- Read only</small>
                 {% endif %}
-            </tr>
-        </tfoot>
-    </table>
-    <footer>
-        <p>Adrian Lesniak nr. indeksu 154256</p>
-    </footer>
-    </body>
-    </html>
+            </h5>
+        </div>
+        <!-- Filters and search przeniesione tutaj -->
+        <div class="card-body pb-0">
+            <div class="card mb-3">
+                <div class="card-body py-2">
+                    <h6 class="card-title mb-2" style="font-size:1rem;">
+                        <i class="fas fa-search"></i>
+                        Filters and Search
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="searchInput" 
+                                   placeholder="Search product...">
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="categoryFilter">
+                                <option value="">All categories</option>
+                                {% for cat in categories %}
+                                    <option value="{{ cat }}">{{ cat }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="sortBy">
+                                <option value="name">Sort by name</option>
+                                <option value="price">Sort by price</option>
+                                <option value="id">Sort by ID</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-secondary w-100" onclick="resetFilters()">
+                                <i class="fas fa-undo"></i>
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body pt-0">
+            {% if products %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="small sort-col" data-sort="id"> <i class="fas fa-hashtag"></i> ID <span class="sort-arrow"></span></th>
+                                <th class="small sort-col" data-sort="name"> <i class="fas fa-box"></i> Name <span class="sort-arrow"></span></th>
+                                <th class="small"><i class="fas fa-info-circle"></i> Description</th>
+                                <th class="small"><i class="fas fa-tag"></i> Category</th>
+                                <th class="small sort-col" data-sort="price"> <i class="fas fa-euro-sign"></i> Price <span class="sort-arrow"></span></th>
+                                <th class="small"><i class="fas fa-calendar"></i> Created Date</th>
+                                {% if is_admin %}<th class="small"><i class="fas fa-cogs"></i> Actions</th>{% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                            <tr>
+                                <td>
+                                    <span class="badge bg-primary">{{ product.id }}</span>
+                                </td>
+                                <td>
+                                    <strong>{{ product.name }}</strong>
+                                </td>
+                                <td>
+                                    <span class="text-muted">{{ product.description[:50] }}{% if product.description|length > 50 %}...{% endif %}</span>
+                                </td>
+                                <td>
+                                    <span class="badge {% if product.category == 'Beverages' %}bg-primary{% elif product.category == 'Food' %}bg-success{% elif product.category == 'Electronics' %}bg-info text-dark{% elif product.category == 'Clothing' %}bg-warning text-dark{% elif product.category == 'Books' %}bg-danger{% else %}bg-secondary{% endif %}">{{ product.category }}</span>
+                                </td>
+                                <td>
+                                    <span class="text-success fw-bold">{{ "%.2f"|format(product.price) }} €</span>
+                                </td>
+                                <td>
+                                    <small class="text-muted">
+                                        {% if product.created_at %}
+                                            {{ product.created_at[:10] }}
+                                        {% else %}
+                                            No data
+                                        {% endif %}
+                                    </small>
+                                </td>
+                                {% if is_admin %}
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ url_for('edit_product', id=product.id) }}" 
+                                           class="btn btn-sm btn-outline-primary" 
+                                           title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-danger" 
+                                                onclick="confirmDelete({{ product.id }}, '{{ product.name }}')"
+                                                title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-info" 
+                                                onclick="showProductDetails({{ product.id }})"
+                                                title="Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No Products</h5>
+                    <p class="text-muted">There are no products in the system yet.</p>
+                    {% if is_admin %}
+                    <a href="{{ url_for('add_product') }}" class="btn btn-custom">
+                        <i class="fas fa-plus-circle"></i>
+                        Add First Product
+                    </a>
+                    {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        Only administrators can add products to the system.
+                    </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Filters and search -->
+    <!-- Usuwam drugą sekcję Filters and Search -->
+</div>
+
+<!-- Product details modal -->
+<div class="modal fade" id="productDetailsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-box"></i>
+                    Product Details
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="productDetailsContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete form (hidden) -->
+<form id="deleteForm" method="POST" style="display: none;">
+    <!-- Form will be generated dynamically -->
+</form>
+
+<script>
+// Delete confirmation function
+function confirmDelete(productId, productName) {
+    if (confirm(`Are you sure you want to delete product "${productName}"?`)) {
+        // Create delete form
+        const form = document.getElementById('deleteForm');
+        form.action = `/delete_product/${productId}`;
+        form.method = 'POST';
+        form.submit();
+    }
+}
+
+// Show product details function
+function showProductDetails(productId) {
+    const product = {{ products|tojson }};
+    const selectedProduct = product.find(p => p.id === productId);
+    if (selectedProduct) {
+        const content = `
+            <div class="row">
+                <div class="col-md-6">
+                    <h6><i class="fas fa-box"></i> Basic Information:</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>ID:</strong> ${selectedProduct.id}</li>
+                        <li><strong>Name:</strong> ${selectedProduct.name}</li>
+                        <li><strong>Category:</strong> ${selectedProduct.category}</li>
+                        <li><strong>Price:</strong> ${selectedProduct.price} €</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6><i class="fas fa-info-circle"></i> Description:</h6>
+                    <p>${selectedProduct.description}</p>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <h6><i class="fas fa-calendar"></i> Dates:</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>Created:</strong> ${selectedProduct.created_at || 'No data'}</li>
+                        <li><strong>Updated:</strong> ${selectedProduct.updated_at || 'No data'}</li>
+                    </ul>
+                </div>
+            </div>
+        `;
+        document.getElementById('productDetailsContent').innerHTML = content;
+        var modal = new bootstrap.Modal(document.getElementById('productDetailsModal'));
+        modal.show();
+    }
+}
+
+// Search and filtering
+document.getElementById('searchInput').addEventListener('input', filterProducts);
+document.getElementById('categoryFilter').addEventListener('change', filterProducts);
+document.getElementById('sortBy').addEventListener('change', filterProducts);
+
+let currentSort = {col: 'name', dir: 'asc'};
+
+function setSortArrows() {
+  document.querySelectorAll('.sort-col').forEach(th => {
+    const arrow = th.querySelector('.sort-arrow');
+    if (th.dataset.sort === currentSort.col) {
+      arrow.innerHTML = currentSort.dir === 'asc' ? '<i class="fas fa-arrow-up"></i>' : '<i class="fas fa-arrow-down"></i>';
+    } else {
+      arrow.innerHTML = '';
+    }
+  });
+}
+
+document.querySelectorAll('.sort-col').forEach(th => {
+  th.style.cursor = 'pointer';
+  th.addEventListener('click', function() {
+    const col = th.dataset.sort;
+    if (currentSort.col === col) {
+      currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+      currentSort.col = col;
+      currentSort.dir = 'asc';
+    }
+    filterProducts();
+    setSortArrows();
+  });
+});
+
+function filterProducts() {
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  const categoryFilter = document.getElementById('categoryFilter').value;
+  const sortBy = currentSort.col;
+  const sortDir = currentSort.dir;
+  const table = document.querySelector('table tbody');
+  let rows = Array.from(table.querySelectorAll('tr'));
+
+  // Filtrowanie
+  rows.forEach(row => {
+    const name = row.cells[1].textContent.toLowerCase();
+    const description = row.cells[2].textContent.toLowerCase();
+    const category = row.cells[3].textContent;
+    const matchesSearch = name.includes(searchTerm) || description.includes(searchTerm);
+    const matchesCategory = !categoryFilter || category.includes(categoryFilter);
+    row.style.display = matchesSearch && matchesCategory ? '' : 'none';
+  });
+
+  // Sortowanie
+  rows = rows.filter(row => row.style.display !== 'none');
+  rows.sort((a, b) => {
+    let valA, valB;
+    if (sortBy === 'name') {
+      valA = a.cells[1].textContent;
+      valB = b.cells[1].textContent;
+    } else if (sortBy === 'price') {
+      valA = parseFloat(a.cells[4].textContent);
+      valB = parseFloat(b.cells[4].textContent);
+    } else if (sortBy === 'id') {
+      valA = parseInt(a.cells[0].textContent);
+      valB = parseInt(b.cells[0].textContent);
+    }
+    if (valA < valB) return sortDir === 'asc' ? -1 : 1;
+    if (valA > valB) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+  rows.forEach(row => table.appendChild(row));
+}
+setSortArrows();
+
+function resetFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('categoryFilter').value = '';
+    document.getElementById('sortBy').value = 'name';
+    
+    const rows = document.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+        row.style.display = '';
+    });
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    switch(e.key) {
+        case 'n':
+        case 'N':
+            if (e.ctrlKey) {
+                e.preventDefault();
+                {% if is_admin %}
+                window.location.href = '{{ url_for("add_product") }}';
+                {% else %}
+                alert('Only administrators can add products.');
+                {% endif %}
+            }
+            break;
+        case 'h':
+        case 'H':
+            if (e.ctrlKey) {
+                e.preventDefault();
+                window.location.href = '{{ url_for("home") }}';
+            }
+            break;
+    }
+});
+
+// Keyboard shortcuts information
+setTimeout(function() {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-info alert-dismissible fade show';
+    {% if is_admin %}
+    alertDiv.innerHTML = `
+        <i class="fas fa-keyboard"></i>
+        <strong>Keyboard shortcuts:</strong> Ctrl+N (add product), Ctrl+H (main menu)
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    {% else %}
+    alertDiv.innerHTML = `
+        <i class="fas fa-keyboard"></i>
+        <strong>Keyboard shortcuts:</strong> Ctrl+H (main menu) - Read-only access
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    {% endif %}
+    document.querySelector('.menu-section').insertBefore(alertDiv, document.querySelector('.card'));
+}, 2000);
+</script>
+{% endblock %}
+

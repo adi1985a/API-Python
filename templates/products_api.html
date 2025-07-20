@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Products API{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4"><i class="fas fa-code"></i> Products API</h2>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5>API Endpoint</h5>
+            <pre><code>GET /api/products</code></pre>
+            <h5>Sample Response</h5>
+            <pre style="background:#f8f9fa; border-radius:6px; padding:1rem; font-size:0.95rem;">
+{{ products|tojson(indent=2) }}
+            </pre>
+            <h5>How to use</h5>
+            <ul>
+                <li>Use <code>GET /api/products</code> to fetch all products as JSON.</li>
+                <li>Use <code>POST /api/add_product</code> to add a product (admin only).</li>
+                <li>Use <code>PUT /api/edit_product/&lt;id&gt;</code> to edit a product (admin only).</li>
+                <li>Use <code>DELETE /api/delete_product/&lt;id&gt;</code> to delete a product (admin only).</li>
+            </ul>
+            <h5>Example Request (fetch all products):</h5>
+            <pre><code>curl http://localhost:5000/api/products</code></pre>
+            <h5>Example Response:</h5>
+            <pre style="background:#f8f9fa; border-radius:6px; padding:1rem; font-size:0.95rem;">
+[
+  {
+    "id": 1,
+    "name": "Cola-Cola",
+    "description": "Cola-Cola, 0.5l",
+    "price": 3.5,
+    "category": "Beverages"
+  },
+  ...
+]
+            </pre>
+            <a href="{{ url_for('home') }}" class="btn btn-secondary mt-3"><i class="fas fa-home"></i> Back to Main Menu</a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

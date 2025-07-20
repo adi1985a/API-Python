@@ -1,157 +1,299 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
+
+{% block title %}Register - Product Management System{% endblock %}
+
+{% block content %}
+<div class="menu-section">
+    <h2 class="menu-title">
+        <i class="fas fa-user-plus"></i>
+        Register New Account
+    </h2>
     
-    <title>Register Page</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background-color: #87CEEB; /* Jasnoniebieskie tło */
-        }
-
-        h1 {
-            text-align: center;
-            color: #4682B4; /* Granatowy kolor nagłówka */
-            font-size: 30px;
-        }
-
-        form {
-            width: 60%;
-            margin: 20px auto;
-            background-color: #fff; /* Białe tło formularza */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #4682B4; /* Granatowy kolor etykiety */
-        }
-
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
-            border: 1px solid #4682B4; /* Granatowa obwódka dla pól tekstowych */
-            border-radius: 4px;
-        }
-
-        button {
-            background-color: #4682B4; /* Granatowy kolor przycisku */
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #5F9EA0; /* Ciemniejszy odcień granatowego po najechaniu */
-        }
-
-        nav {
-            background-color: #4caf50; /* Zielony kolor menu */
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        nav ul li {
-            display: inline-block;
-            margin-right: 30px;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: #fff;
-            font-size: 20px;
-            transition: color 0.3s;
-        }
-
-        nav ul li a:hover {
-            color: #ffcc00;
-        }
-
-        a {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #000000; /* Zielony kolor linku */
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: #ffcc00;
-        }
-
-        footer {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
-</head>
-<body>
-    <nav>
-        <ul class="guest-menu">
-            <li><a href="{{ url_for('home') }}">Strona Główna</a></li>
-            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ url_for('register') }}">Zarejestruj się</a></li>
-            <li><a href="{{ url_for('login') }}">Zaloguj się</a></li>
-        </ul>
+    <div class="decoration-line"></div>
     
-    </nav>
-<h1>Rejestracja</h1>
-
-<form method="POST" action="{{ url_for('register') }}">
-    <label for="name">Imię:</label>
-    <input type="text" name="name" id="name" required="" autocomplete="off">
-
-    <label for="email">Email:</label>
-    <input type="email" name="email" id="email" required="" autocomplete="off">
-
-    <label for="password">Hasło:</label>
-    <input type="password" name="password" id="password" required="" autocomplete="off">
-
-    <label for="password_confirmation">Potwierdź hasło:</label>
-    <input type="password" name="password_confirmation" id="password_confirmation" required="" autocomplete="off">
-
-    <button type="submit">Zarejestruj się</button>
-</form>
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-            <div class="alert alert-{{ category }}">
-                {{ message }}
+    <!-- Registration information -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title text-center">
+                <i class="fas fa-info-circle"></i>
+                Registration Information
+            </h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i>
+                        <strong>Benefits of registration:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Access to product management</li>
+                            <li>Secure data storage</li>
+                            <li>Operation history</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-shield-alt"></i>
+                        <strong>Security:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Data is encrypted</li>
+                            <li>Sessions are secure</li>
+                            <li>All operations are logged</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-        {% endfor %}
-    {% endif %}
-{% endwith %}
+        </div>
+    </div>
 
-<a href="{{ url_for('login') }}">Zaloguj się</a>
+    <!-- Registration form -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title text-center mb-4">
+                <i class="fas fa-user-edit"></i>
+                Enter Registration Data
+            </h5>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show">
+                            <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' }}"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST" action="{{ url_for('register') }}" id="registerForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">
+                                <i class="fas fa-user"></i>
+                                Full Name
+                            </label>
+                            <input type="text" class="form-control" id="name" name="name" 
+                                   placeholder="Enter your full name" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope"></i>
+                                Email Address
+                            </label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   placeholder="Enter your email" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock"></i>
+                                Password
+                            </label>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   placeholder="Enter password (min. 6 characters)" required>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i>
+                                Password must be at least 6 characters long
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label">
+                                <i class="fas fa-lock"></i>
+                                Confirm Password
+                            </label>
+                            <input type="password" class="form-control" id="confirm_password" 
+                                   placeholder="Enter password again" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="terms" required>
+                        <label class="form-check-label" for="terms">
+                            <i class="fas fa-check-square"></i>
+                            I accept the <a href="#" onclick="showTerms()">terms of service</a> and <a href="#" onclick="showPrivacy()">privacy policy</a>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-custom">
+                        <i class="fas fa-user-plus"></i>
+                        Register
+                    </button>
+                </div>
+            </form>
+            
+            <div class="text-center mt-3">
+                <p>Already have an account? 
+                    <a href="{{ url_for('login') }}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Log In
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation buttons -->
+    <div class="text-center mt-4">
+        <a href="{{ url_for('home') }}" class="btn btn-secondary">
+            <i class="fas fa-home"></i>
+            Return to Main Menu
+        </a>
+    </div>
+</div>
 
-<a href="{{ url_for('home') }}">Wróć do Strony glownej</a>
-<footer>
-    <p>Adrian Lesniak nr. indeksu 154256</p>
-</footer>
+<!-- Terms of service modal -->
+<div class="modal fade" id="termsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-contract"></i>
+                    Terms of Service
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>§1. General Provisions</h6>
+                <p>The Product Management System is a web application that enables product management.</p>
+                
+                <h6>§2. System Usage</h6>
+                <p>The user agrees to:</p>
+                <ul>
+                    <li>Follow security guidelines</li>
+                    <li>Not share their login credentials</li>
+                    <li>Use the system according to its intended purpose</li>
+                </ul>
+                
+                <h6>§3. Liability</h6>
+                <p>The system administrator is not responsible for user actions.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-</body>
-</html>
+<!-- Privacy policy modal -->
+<div class="modal fade" id="privacyModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-shield-alt"></i>
+                    Privacy Policy
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Data Collection</h6>
+                <p>We only collect data necessary for system operation:</p>
+                <ul>
+                    <li>Email address</li>
+                    <li>Full name</li>
+                    <li>Product data (for logged-in users)</li>
+                </ul>
+                
+                <h6>Security</h6>
+                <p>Data is stored securely and is not shared with third parties.</p>
+                
+                <h6>Logs</h6>
+                <p>The system automatically logs operations for security purposes.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showTerms() {
+    const modal = new bootstrap.Modal(document.getElementById('termsModal'));
+    modal.show();
+}
+
+function showPrivacy() {
+    const modal = new bootstrap.Modal(document.getElementById('privacyModal'));
+    modal.show();
+}
+
+// Form validation
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+    const terms = document.getElementById('terms').checked;
+    
+    // Check if all fields are filled
+    if (!name || !email || !password || !confirmPassword) {
+        e.preventDefault();
+        alert('All fields are required!');
+        return false;
+    }
+    
+    // Check password length
+    if (password.length < 6) {
+        e.preventDefault();
+        alert('Password must be at least 6 characters long!');
+        return false;
+    }
+    
+    // Check if passwords match
+    if (password !== confirmPassword) {
+        e.preventDefault();
+        alert('Passwords do not match!');
+        return false;
+    }
+    
+    // Check email format
+    if (!email.includes('@')) {
+        e.preventDefault();
+        alert('Please enter a valid email address!');
+        return false;
+    }
+    
+    // Check terms acceptance
+    if (!terms) {
+        e.preventDefault();
+        alert('You must accept the terms of service!');
+        return false;
+    }
+});
+
+// Real-time password checking
+document.getElementById('confirm_password').addEventListener('input', function() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = this.value;
+    
+    if (confirmPassword && password !== confirmPassword) {
+        this.setCustomValidity('Passwords do not match');
+    } else {
+        this.setCustomValidity('');
+    }
+});
+
+// Animation for form fields
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('.form-control');
+    inputs.forEach((input, index) => {
+        input.style.animationDelay = `${index * 0.1}s`;
+        input.style.animation = 'fadeInUp 0.6s ease forwards';
+    });
+});
+</script>
+{% endblock %}
