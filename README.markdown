@@ -24,7 +24,7 @@ _A Flask-based web application for managing a product catalog, featuring user au
 
 <br> 
 <p align="center">
-  <img src="screenshots/1.gif" width="80%">
+  <img src="screenshots/1.gif" width="90%">
 </p>
 <br>
 
