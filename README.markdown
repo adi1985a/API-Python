@@ -20,7 +20,7 @@ _A Flask-based web application for managing a product catalog, featuring user au
 
 ## 📄 Overview
 
-**Flask ProductManager** is a web application based on **Flask** (Python), designed for managing a product catalog. It enables user registration and login (with session support), as well as product management (CRUD) via a web panel and REST API. Product and user data are stored in JSON files. Project created by Adrian Leśniak.
+**Flask ProductManager** is a web application based on **Flask** (Python), designed for managing a product catalog. It enables user registration and login (with session support), as well as product management (CRUD) via a web panel and REST API. Product and user data are stored in JSON files. Project created by Adrian Lesniak.
 
 <br> 
 <p align="center">
@@ -201,7 +201,7 @@ Project under the **MIT** license. See the `LICENSE` file for details.
 
 ## 📧 Contact
 
-Project: **Adrian Leśniak**
+Project: **Adrian Lesniak**
 For questions or suggestions – open an issue on GitHub or contact directly.
 
 ---
